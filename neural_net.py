@@ -1,58 +1,68 @@
-import numpy as np
-
-class NeuralNetwort():
-
-    def __init__(self):
-        np.random.seed(1)
-
-        self.synaptic_weights = 2 * np.random.random((3,1)) - 1
-
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
-    
-    def sigmoid_derivative(self, x):
-        return x * (1 - x)
-
-    def train(self, training_inputs, training_outputs, training_iterations):
-
-        for iteration in range(training_iterations):
-
-            output = self.think(training_inputs)
-            error = training_outputs - output
-            adjustments = np.dot(training_inputs.T, error * self.sigmoid_derivative(output))
-            self.synaptic_weights += adjustments
-
-    def think(self, inputs):
-
-        inputs = inputs.astype(float)
-        output = self.sigmoid(np.dot(inputs, self.synaptic_weights))
-
-        return output
+import numpy as np 
+import nnfs
+from nnfs.datasets import spiral_data
 
 
-if __name__ == "__main__":
+nnfs.init()
 
-    neural_network = NeuralNetwort()
+class Layer_Dense:
+    def __init__(self, n_inputs, n_neurons):
+        self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
+        self.biases = np.zeros((1, n_neurons))
+    def forward(self, inputs):
+        self.output = np.dot(inputs, self.weights) + self.biases
 
-    print("Random synaptic weights: ")
-    print(neural_network.synaptic_weights)
 
-    training_inputs = np.array([[0,0,1],
-                            [1,1,1],
-                            [1,0,1],
-                            [0,1,1]])
+class Activation_ReLU:
+    def forward(self, inputs):
+        self.output = np.maximum(0, inputs)
 
-    training_outputs = np.array([[0,1,1,0]]).T
+class Activation_Softmax:
+    def forward(self, inputs):
+        exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
+        probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
+        self.output = probabilities
 
-    neural_network.train(training_inputs, training_outputs, 10000)
+class Loss:
+    def calculate(self, output, y):
+        sample_losses = self.forward(output, y)
+        data_loss = np.mean(sample_losses)
+        return data_loss
 
-    print("Synaptic weights after training")
-    print(neural_network.synaptic_weights)
+class Loss_CategoricalCrossentropy(Loss):
+    def forward(self, y_pred, y_true):
+        samples = len(y_pred)
+        y_pred_clipped = np.clip(y_pred, 1e-7, 1-1e-7)
 
-    A = str(input("Input 1: "))
-    B = str(input("Input 2: "))
-    C = str(input("Input 3: "))
+        if len(y_true.shape) == 1:
+            correct_confidences = y_pred_clipped[range(samples), y_true]
 
-    print("New situation: input data = ", A, B, C)
-    print("Output data: ")
-    print(neural_network.think(np.array([A, B, C])))
+        elif len(y_true.shape) == 2:
+            correct_confidences = np.sum(y_pred_clipped*y_true, axis=1)
+
+        negative_log_likelihoods = -np.log(correct_confidences)
+        return negative_log_likelihoods
+
+
+
+
+X, y = spiral_data(samples=100, classes=3)
+
+dense1 = Layer_Dense(2,3)
+activation1 = Activation_ReLU()
+
+dense2 = Layer_Dense(3, 3)
+activation2 = Activation_Softmax()
+
+dense1.forward(X)
+activation1.forward(dense1.output)
+
+dense2.forward(activation1.output)
+activation2.forward(dense2.output)
+
+print(activation2.output[:5])
+
+loss_function = Loss_CategoricalCrossentropy()
+loss = loss_function.calculate(activation2.output, y)
+
+print("Loss:", loss)
