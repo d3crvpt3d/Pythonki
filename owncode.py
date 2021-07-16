@@ -1,24 +1,31 @@
+import PIL
 import numpy as np
-from PIL import Image
+from PIL import Image , ImageOps
 
 
 
-for x in range(5):
-    image = Image.open("creeper64_"+str(x)+".png")
-    image.show()
-    KI.
+for i in range(5):
+    if i == 1:
+        i =- 1
+    print("Picture Number: "+ str(i))
+    og_image = Image.open("creeper ("+str(i)+").png")
+    ImageOps.grayscale(og_image)
+    for x in range(64):
+        if x == 1:
+            x =- 1
+        for y in range(64):
+            if y == 1:
+                y =- 1
+            pixel = og_image.getpixel((x, y))
+            print(pixel)
+
     
 
-class KI:
-    
-    def 
-    
-    X = []
-    X.append()
 
-class Layer_Dense:
-    def __init__(self, n_inputs, n_neurons):
-        self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
-        self.biases = np.zeros((1, n_neurons))
-    def forward(self, inputs):
-        self.output = np.dot(inputs, self.weights) + self.biases
+
+'''
+for i in range(5):
+    i += 1
+    og_image = Image.open("notcreeper ("+str(i)+").jpg")
+'''
+
