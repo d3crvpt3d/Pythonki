@@ -40,6 +40,6 @@ X[0] = j
 #forward prop
 #Z1 = W1 * X + b
 
-print(str(i) +" "+ str(j))
+print("I: "+str(i)+" J: "+str(j))
 for f in range(10):
-    print(X[f])
+    print("X "+str(f)+": "+str(X[f]))
