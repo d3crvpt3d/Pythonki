@@ -31,7 +31,8 @@ for y in range(3):
 
     for x in range(3):
 
-        X[position] = image.getpixel((x, y))
+        tmp = image.getpixel((x, y))
+        X[position] = tmp[0]
         position += 1
 
 X[0] = j
