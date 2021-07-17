@@ -5,7 +5,7 @@ X = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 X1 = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 #inputs aus bildern in array mit richtgen guess in stelle "0" (0 = linie von links oben nach rechts unten, 1 = mitte oben unten, 2 = ) 1 und 4 und 5 sind "0"
-def training(Name_output_model):
+def training(Name_output_model, W1, W2, W3):
     i = np.random.randint(1, 10)
     if i == 1:
         j = 0
@@ -47,6 +47,27 @@ def training(Name_output_model):
 
     for i in range(9):
         X1[i] = X[i+1]
+    
+    #speichern
+    f = open(str(Name_output_model)+".KI_model_W1", "w")
+    xx = 0
+    for x in W1:
+        f.write(str(W1[xx]))
+    
+    f = open(str(Name_output_model)+".KI_model_W2", "w")
+    xx = 0
+    for x in W2:
+        f.write(str(W2[xx]))
+    
+    f = open(str(Name_output_model)+".KI_model_W3", "w")
+    xx = 0
+    for x in W3:
+        f.write(str(W3[xx]))
+
+
+
+
+
 
 X1_length = len(X1) #length of X1
 
@@ -54,33 +75,39 @@ X1_length = len(X1) #length of X1
 
 def Sample(i, Name_input_model):                                  #use own picture
     image = Image.open("test_"+str(i)+".png")
-
-    f = open(str(Name_input_model)+".KI_model", "a")
-    for x in W1:
-        f.write(str(W1[x]))
+    xx = 0
+    f = open(str(Name_input_model)+".KI_model_W1", "r")
+    f.read() ##############
+    f.close
+    xx = 0
+    f = open(str(Name_input_model)+".KI_model_W2", "r")
+    f.read() ##############
+    f.close
+    xx = 0
+    f = open(str(Name_input_model)+".KI_model_W3", "r")
+    f.read() ##############
     f.close
 
 
 
-
 #init weights and biases
-class Weights:
-    def weights1(X1_length, neuron_anzahl):
-        W1 = np.random.randn(X1_length, neuron_anzahl)
 
-    def weights2(inputs_anzahl, neuron_anzahl):
-        W2 = np.random.randn(inputs_anzahl, neuron_anzahl)
+def weights1(X1_length, neuron_anzahl):
+    return np.random.randn(X1_length, neuron_anzahl)
 
-    def weights3(inputs_anzahl, neuron_anzahl):
-        W3 = np.random.randn(inputs_anzahl, neuron_anzahl)
+def weights2(inputs_anzahl, neuron_anzahl):
+    return np.random.randn(inputs_anzahl, neuron_anzahl)
 
-class Biases:
-    def bias1(neuron_anzahl):
-        b1 = np.zeros((1, neuron_anzahl))
-    def bias2(neuron_anzahl):
-        b2 = np.zeros((1, neuron_anzahl))
-    def bias3(neuron_anzahl):
-        b3 = np.zeros((1, neuron_anzahl))
+def weights3(inputs_anzahl, neuron_anzahl):
+    return np.random.randn(inputs_anzahl, neuron_anzahl)
+
+
+def bias1(neuron_anzahl):
+    return np.zeros((1, neuron_anzahl))
+def bias2(neuron_anzahl):
+    return np.zeros((1, neuron_anzahl))
+def bias3(neuron_anzahl):
+    return np.zeros((1, neuron_anzahl))
 
 
 
@@ -98,10 +125,14 @@ class Softmax:
 
 
 #User Interface
-Weights.weights1(9, 10)
-Weights.weights2(10,10)
-Weights.weights3(10,10)
+W1 = weights1(9, 10)
+W2 = weights2(10, 10)
+W3 = weights3(10, 10)
 
-#training("Model1") #wie das model heißen soll
+b1 = bias1(10)
+b2 = bias2(10)
+b3 = bias3(10)
+
+training("Model1", W1, W2, W3) #wie das model heißen soll
 
 Sample(1, "Model1")  #welches bild und welches modell genommen werden soll
