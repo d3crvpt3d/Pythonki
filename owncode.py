@@ -55,19 +55,32 @@ X1_length = len(X1) #length of X1
 def Sample(i, Name_input_model):                                  #use own picture
     image = Image.open("test_"+str(i)+".png")
 
+    f = open(str(Name_input_model)+".KI_model", "a")
+    for x in W1:
+        f.write(str(W1[x]))
+    f.close
+
 
 
 
 #init weights and biases
+class Weights:
+    def weights1(X1_length, neuron_anzahl):
+        W1 = np.random.randn(X1_length, neuron_anzahl)
 
-def weights1(X1_length, output_anzahl):
-    W1 = np.random.randn(X1_length, output_anzahl)
+    def weights2(inputs_anzahl, neuron_anzahl):
+        W2 = np.random.randn(inputs_anzahl, neuron_anzahl)
 
-def weights2(inputs_anzahl, output_anzahl):
-    W2 = np.random.randn(inputs_anzahl, output_anzahl)
+    def weights3(inputs_anzahl, neuron_anzahl):
+        W3 = np.random.randn(inputs_anzahl, neuron_anzahl)
 
-def weights3(inputs_anzahl, output_anzahl):
-    W3 = np.random.randn(inputs_anzahl, output_anzahl)
+class Biases:
+    def bias1(neuron_anzahl):
+        b1 = np.zeros((1, neuron_anzahl))
+    def bias2(neuron_anzahl):
+        b2 = np.zeros((1, neuron_anzahl))
+    def bias3(neuron_anzahl):
+        b3 = np.zeros((1, neuron_anzahl))
 
 
 
@@ -85,6 +98,10 @@ class Softmax:
 
 
 #User Interface
-training("Model1") #wie das model heißen soll
+Weights.weights1(9, 10)
+Weights.weights2(10,10)
+Weights.weights3(10,10)
 
-Sample(1, "Model1")#welches bild und welches modell genommen werden soll
+#training("Model1") #wie das model heißen soll
+
+Sample(1, "Model1")  #welches bild und welches modell genommen werden soll
