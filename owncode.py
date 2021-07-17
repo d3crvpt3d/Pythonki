@@ -32,7 +32,6 @@ for y in range(3):
     for x in range(3):
 
         X[position] = image.getpixel((x, y))
-        print(X[position])
         position += 1
 
 X[0] = j
@@ -41,3 +40,5 @@ X[0] = j
 #Z1 = W1 * X + b
 
 print(str(i) +" "+ str(j))
+for f in range(10):
+    print(X[f])
