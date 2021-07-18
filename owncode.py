@@ -42,10 +42,11 @@ for runde in range(runden):
     for x in X:
         for pixel in range(784):
             for xx in range(20):
-                Neurons_h1[xx] = sigmoid(np.dot(X[runde], W1.T) + b1[xx])
+                Neurons_h1[xx] = sigmoid(np.dot(X[runde], W1[xx].T) + b1[xx])
             for xx in range(20):
-                Neurons_h2[xx] = sigmoid(np.dot(Neurons_h1, W2.T) +b2[xx])
-            Neurons_o = np.dot(Neurons_h2, W3[pixel]) + b3
+                Neurons_h2[xx] = sigmoid(np.dot(Neurons_h1, W2[xx].T) + b2[xx])
+            for xx in range(10):
+                Neurons_o = np.dot(Neurons_h2, W3[xx].T) + b3
             output = softmax(Neurons_o)
             pixel += 1
 
