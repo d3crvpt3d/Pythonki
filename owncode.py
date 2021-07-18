@@ -30,25 +30,25 @@ def ReLU(x):
     else:
         return x
 
-Neurons_h1 = [20]
-Neurons_h2 = [20]
-Neurons_o = [10]
-output = [10]
+Neurons_h1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Neurons_h2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Neurons_o = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+output = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 runden = 1
 
 #forward prop
 for runde in range(runden):
-    for x in X:
-        test = 0
-        for xx in range(20):
-            print(xx)
-            Neurons_h1[xx] = sigmoid(W1[xx] @ X[test]) + b1[xx]
-        for xx in range(20):
-            Neurons_h2[xx] = sigmoid(W2[xx] @ Neurons_h1[xx]) + b2[xx]
-        for xx in range(10):
-            Neurons_o[xx] = W3[xx] @ Neurons_h2[xx].T + b3
-        test += 1
+    for x in X[5000:]:
+        xx = 0
+        Neurons_h1 = sigmoid(np.dot(W1, X[xx]) + b1)
+        Neurons_h2 = sigmoid(np.dot(W2, Neurons_h1) + b2)
+        Neurons_o = np.dot(W3, Neurons_h2) + b3
+        output = softmax(Neurons_o)
+        xx += 1
+
     output = softmax(Neurons_o)
+
+print(output)
 
 
 
