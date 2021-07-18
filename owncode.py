@@ -8,7 +8,6 @@ X, y = get_mnist()
 W1 = np.random.uniform(-0.5, 0.5, (20, 784))
 W2 = np.random.uniform(-0.5, 0.5, (20, 20))
 W3 = np.random.uniform(-0.5, 0.5, (10, 20))
-
 b1 = np.zeros((20, 1))
 b2 = np.zeros((20, 1))
 b3 = np.zeros((10, 1))
@@ -40,15 +39,16 @@ runden = 1
 #forward prop
 for runde in range(runden):
     for x in X:
-        for pixel in range(784):
-            for xx in range(20):
-                Neurons_h1[xx] = sigmoid(np.dot(X[runde], W1[xx].T) + b1[xx])
-            for xx in range(20):
-                Neurons_h2[xx] = sigmoid(np.dot(Neurons_h1, W2[xx].T) + b2[xx])
-            for xx in range(10):
-                Neurons_o = np.dot(Neurons_h2, W3[xx].T) + b3
-            output = softmax(Neurons_o)
-            pixel += 1
+        test = 0
+        for xx in range(20):
+            print(xx)
+            Neurons_h1[xx] = sigmoid(W1[xx] @ X[test]) + b1[xx]
+        for xx in range(20):
+            Neurons_h2[xx] = sigmoid(W2[xx] @ Neurons_h1[xx]) + b2[xx]
+        for xx in range(10):
+            Neurons_o[xx] = W3[xx] @ Neurons_h2[xx].T + b3
+        test += 1
+    output = softmax(Neurons_o)
 
 
 
