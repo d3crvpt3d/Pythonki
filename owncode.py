@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 
 X, y = get_mnist()
-W1 = np.random.uniform(-0.5, 0.5, (784, 20))
+W1 = np.random.uniform(-0.5, 0.5, (20, 784))
 W2 = np.random.uniform(-0.5, 0.5, (20, 20))
-W3 = np.random.uniform(-0.5, 0.5, (20, 10))
+W3 = np.random.uniform(-0.5, 0.5, (10, 20))
 
 b1 = np.zeros((20, 1))
 b2 = np.zeros((20, 1))
