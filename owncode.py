@@ -8,9 +8,9 @@ X, y = get_mnist()
 W1 = np.random.uniform(-0.5, 0.5, (20, 784))
 W2 = np.random.uniform(-0.5, 0.5, (20, 20))
 W3 = np.random.uniform(-0.5, 0.5, (10, 20))
-b1 = np.zeros((20, 1))
-b2 = np.zeros((20, 1))
-b3 = np.zeros((10, 1))
+b1 = np.zeros((20))
+b2 = np.zeros((20))
+b3 = np.zeros((10))
 
 def sigmoid(x):
     s = 1/(1+np.exp(-x))
@@ -30,25 +30,25 @@ def ReLU(x):
     else:
         return x
 
-Neurons_h1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Neurons_h2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Neurons_o = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-output = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+output = []
+
 runden = 1
 
 #forward prop
 for runde in range(runden):
-    for x in X[5000:]:
+    #for x in X[59990:]:
         xx = 0
         Neurons_h1 = sigmoid(np.dot(W1, X[xx]) + b1)
+        print(X[xx].shape)
+        print("lost")
+        print(Neurons_h1.shape)
         Neurons_h2 = sigmoid(np.dot(W2, Neurons_h1) + b2)
         Neurons_o = np.dot(W3, Neurons_h2) + b3
         output = softmax(Neurons_o)
         xx += 1
+        output = softmax(Neurons_o)
 
-    output = softmax(Neurons_o)
-
-print(output)
+#print(output)
 
 
 
@@ -59,3 +59,4 @@ while True:
     plt.imshow(img.reshape(28, 28), cmap="Greys")
     plt.title("Number: "+str(y[index]) +" Guess: "+ str(output[index]))
     plt.show()
+    break
