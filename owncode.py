@@ -62,10 +62,9 @@ for runde in range(runden):
 
 
 # Show results
-while True:
-    index = int(input("Enter a number (0 - 59999): "))
-    img = X[index]
-    plt.imshow(img.reshape(28, 28), cmap="Greys")
-    plt.title("Number: "+str(y[index].argmax()) +" Guess: "+ str(output.argmax()))
-    plt.show()
-    break
+
+index = int(input("Enter a number (0 - 59999): "))
+img = X[index]
+plt.imshow(img.reshape(28, 28), cmap="Greys")
+plt.title("Number: "+str(y[index].argmax()) +" Guess: "+ str(output.argmax()))
+plt.show()
