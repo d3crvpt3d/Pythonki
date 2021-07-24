@@ -17,13 +17,16 @@ def sigmoid(x):
     s = 1/(1+np.exp(-x))
     return s
 
+
 def sigmoid_derivative(x):
     sd = sigmoid(x)*(1-sigmoid(x))
     return sd
 
+
 def softmax(x):
 	e = np.exp(x)
 	return e / e.sum()
+
 
 def ReLU(x):
     if x < 0:
@@ -38,6 +41,7 @@ runden = 1
 update = 0
 
 thisoff = 0
+thisoff_tmp = 0
 off = 10 #fehlerquote = max
 
 W1_best = W1
@@ -48,52 +52,62 @@ W1_test = W1
 W2_test = W2
 W3_test = W3
 
+
+#durchgänge
 for runde in range(runden):
-    xx = 0
-    for x in X[:10]:
+
+
+    #anzahl der neuronale netzwerke
+    for i in range(20):
+
+
+        #reset counter
+        xx = 0
+
         
-        for i in range(10):
-            #randomness based on how off the current of lvl is
-            #(test)
-            #every weight updaten
-            for f in range(len(W1)):
-                for q in range(len(W1[0])):
-                    W1_test[f][q] = 0 - W1_best[f][q] + np.random.random() * 0.5
-            for f in range(len(W2)):
-                for q in range(len(W2[0])):
-                    W2_test[f][q] = 0 - W2_best[f][q] + np.random.random() * 0.5
-            for f in range(len(W3)):
-                for q in range(len(W3[0])):
-                    W2_test[f][q] = 0 - W3_best[f][q] + np.random.random() * 0.5
+        #anzahl bilder
+        for x in X[:100]:
 
 
-            #forward prop
+            #forward prop:
             Neurons_h1 = sigmoid(np.dot(W1_test, X[xx]) + b1)
             Neurons_h2 = sigmoid(np.dot(W2_test, Neurons_h1) + b2)
             Neurons_o = sigmoid(np.dot(W3_test, Neurons_h2) + b3)
             output = softmax(Neurons_o)
-
-            print("output")
-            print(output)
-            print()
-
-            #backprop (not best cuz i dont want to do this real yet)
+            
 
             #calculate off
-            thisoff = sum( abs(output - y[xx]) )
+            thisoff_tmp = thisoff_tmp + sum( abs(output - y[xx]) )
+
+
+            #debug output
             print("output")
             print(output)
             print("y")
             print(y[xx])
 
 
-            #save every weight and bias if output is better then before
-            if thisoff < off:
-                off = thisoff
+            #count for X
+            xx += 1
 
-                W1_best
-                W2_best
-                W3_best
+
+        #backprop:
+
+
+        #sum all of the error rate
+        thisoff = sigmoid(thisoff_tmp)
+
+
+        #save every weight and bias if output is better then before
+        if thisoff < off:
+            
+
+            #update new error rate
+            off = thisoff
+
+            W1_best = W1_test
+            W2_best = W2_test
+            W3_best = W3_test
             
             '''
             #only if something is wrong
@@ -102,18 +116,8 @@ for runde in range(runden):
             b3_best = b3
             '''
 
-            #update weights on the best out of every few nn's
-            print("Start "+str(xx)+" update...")
-            
-            print("Updated! Current error: "+str(off))
-            
-
-        #count for X
-        xx += 1
-
 
 # Show results
-
 index = int(input("Enter a number (0 - 59999): "))
 img = X[index]
 plt.imshow(img.reshape(28, 28), cmap="Greys")
