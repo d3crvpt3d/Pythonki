@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 
 
 X, y = get_mnist() #X[0-5999 pictures, 0-783 pixel in each picture] y[0-59999 pictures, 0-9 real results in array]
-W1 = np.random.uniform(-0.5, 0.5, (20, 784))
-W2 = np.random.uniform(-0.5, 0.5, (20, 20))
-W3 = np.random.uniform(-0.5, 0.5, (10, 20))
+W1 = np.random.uniform(0, 1, (20, 784))
+W2 = np.random.uniform(0, 1, (20, 20))
+W3 = np.random.uniform(0, 1, (10, 20))
 b1 = np.zeros((20))
 b2 = np.zeros((20))
 b3 = np.zeros((10))
@@ -35,27 +35,68 @@ def ReLU(x):
 #some global variables
 output = []
 runden = 1
+update = 0
+thisoff = 0
+off = 1 #off = max
 
+W1_best = W1
+W2_best = W2
+W3_best = W3
+
+W1_test = W1
+W2_test = W2
+W3_test = W3
 
 for runde in range(runden):
-    #for x in X[59990:]:
+    for x in X[:10000]:
         xx = 0
+
+        #randomness based on how off the current of lvl is
+        W1_iteration = np.random.uniform(W1_test - (off * 0.1), W1_test + (off * 0.1), (20, 784))
+        W2_iteration = np.random.uniform(W2_test - (off * 0.1), W2_test + (off * 0.1), (20, 20))
+        W3_iteration = np.random.uniform(W3_test - (off * 0.1), W3_test + (off * 0.1), (10, 20))
+
         #forward prop
-        Neurons_h1 = sigmoid(np.dot(W1, X[xx]) + b1)
-        Neurons_h2 = sigmoid(np.dot(W2, Neurons_h1) + b2)
-        Neurons_o = sigmoid(np.dot(W3, Neurons_h2) + b3)
+        Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
+        Neurons_h2 = sigmoid(np.dot(W2_iteration, Neurons_h1) + b2)
+        Neurons_o = sigmoid(np.dot(W3_iteration, Neurons_h2) + b3)
         output = softmax(Neurons_o)
 
-        #backprop
-        cost = (output - y[xx]) ** 2 #cost of this iteration
-        print("Output: ")
-        print(output)
-        print("Right: ")
-        print(y[xx])
-        print("Cost: ")
-        print(cost)
-        
 
+        #backprop (not best yet cuz i dont want to do this real yet)
+
+        #calculate off
+        thisoff = abs(sum(output - y[xx]))
+        print(y[xx])
+        print()
+        print(output)
+        print()
+        print(thisoff)
+        #save every weight and bias if output is better then before
+        if thisoff < off:
+            off = thisoff
+
+            W1_best = W1_iteration
+            W2_best = W2_iteration
+            W3_best = W3_iteration
+            
+            '''
+            #only if something is wrong
+            b1_best = b1
+            b2_best = b2
+            b3_best = b3
+            '''
+
+        #update weights on the best out of every few pictures
+        if xx % 20 == 0:
+            update += 1
+            print("Start "+str(update)+" update...")
+            
+            W1_test = W1_best
+            W2_test = W2_best
+            W3_test = W3_best
+
+            print("Updated! Current error: "+str(off))
 
         #count for X
         xx += 1
