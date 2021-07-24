@@ -50,40 +50,40 @@ W3_test = W3
 
 for runde in range(runden):
     xx = 0
-    for x in X[:10000]:
+    for x in X[:100]:
         
-
-        #randomness based on how off the current of lvl is
-        W1_iteration = np.random.uniform(low = W1_test - thisoff, high = W1_test + thisoff, size = (20, 784))
-        W2_iteration = np.random.uniform(low = W2_test - thisoff, high = W2_test + thisoff, size = (20, 20))
-        W3_iteration = np.random.uniform(low = W3_test - thisoff, high = W3_test + thisoff, size = (10, 20))
-
-        #forward prop
-        Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
-        Neurons_h2 = sigmoid(np.dot(W2_iteration, Neurons_h1) + b2)
-        Neurons_o = sigmoid(np.dot(W3_iteration, Neurons_h2) + b3)
-        output = softmax(Neurons_o)
+        for i in range(20):
+            #randomness based on how off the current of lvl is
+            W1_iteration = np.random.uniform(low = W1_test - thisoff, high = W1_test + thisoff, size = (20, 784))
+            W2_iteration = np.random.uniform(low = W2_test - thisoff, high = W2_test + thisoff, size = (20, 20))
+            W3_iteration = np.random.uniform(low = W3_test - thisoff, high = W3_test + thisoff, size = (10, 20))
 
 
-        #backprop (not best cuz i dont want to do this real yet)
+            #forward prop
+            Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
+            Neurons_h2 = sigmoid(np.dot(W2_iteration, Neurons_h1) + b2)
+            Neurons_o = sigmoid(np.dot(W3_iteration, Neurons_h2) + b3)
+            output = softmax(Neurons_o)
 
-        #calculate off
-        thisoff = sum( abs(output - y[xx]) )
-        print("thisoff")
-        print(thisoff)
-        print("off")
-        print(off)
-        print("output")
-        print(output)
-        print("y")
-        print(y[xx])
-        #save every weight and bias if output is better then before
-        if thisoff < off:
-            off = thisoff
 
-            W1_best = W1_iteration
-            W2_best = W2_iteration
-            W3_best = W3_iteration
+
+            #backprop (not best cuz i dont want to do this real yet)
+
+            #calculate off
+            thisoff = sum( abs(output - y[xx]) )
+            print("output")
+            print(output)
+            print("y")
+            print(y[xx])
+
+
+            #save every weight and bias if output is better then before
+            if thisoff < off:
+                off = thisoff
+
+                W1_best = W1_iteration
+                W2_best = W2_iteration
+                W3_best = W3_iteration
             
             '''
             #only if something is wrong
@@ -92,10 +92,8 @@ for runde in range(runden):
             b3_best = b3
             '''
 
-        #update weights on the best out of every few pictures
-        if xx % 100 == 0:
-            update += 1
-            print("Start "+str(update)+" update...")
+            #update weights on the best out of every few nn's
+            print("Start "+str(xx)+" update...")
             
             W1_test = W1_best
             W2_test = W2_best
