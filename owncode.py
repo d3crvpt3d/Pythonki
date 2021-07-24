@@ -50,22 +50,32 @@ W3_test = W3
 
 for runde in range(runden):
     xx = 0
-    for x in X[:100]:
+    for x in X[:10]:
         
-        for i in range(20):
+        for i in range(10):
             #randomness based on how off the current of lvl is
-            W1_iteration = np.random.uniform(low = W1_test - thisoff, high = W1_test + thisoff, size = (20, 784))
-            W2_iteration = np.random.uniform(low = W2_test - thisoff, high = W2_test + thisoff, size = (20, 20))
-            W3_iteration = np.random.uniform(low = W3_test - thisoff, high = W3_test + thisoff, size = (10, 20))
+            #(test)
+            #every weight updaten
+            for f in range(len(W1)):
+                for q in range(len(W1[0])):
+                    W1_test[f][q] = 0 - W1_best[f][q] + np.random.random() * 0.5
+            for f in range(len(W2)):
+                for q in range(len(W2[0])):
+                    W2_test[f][q] = 0 - W2_best[f][q] + np.random.random() * 0.5
+            for f in range(len(W3)):
+                for q in range(len(W3[0])):
+                    W2_test[f][q] = 0 - W3_best[f][q] + np.random.random() * 0.5
 
 
             #forward prop
-            Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
-            Neurons_h2 = sigmoid(np.dot(W2_iteration, Neurons_h1) + b2)
-            Neurons_o = sigmoid(np.dot(W3_iteration, Neurons_h2) + b3)
+            Neurons_h1 = sigmoid(np.dot(W1_test, X[xx]) + b1)
+            Neurons_h2 = sigmoid(np.dot(W2_test, Neurons_h1) + b2)
+            Neurons_o = sigmoid(np.dot(W3_test, Neurons_h2) + b3)
             output = softmax(Neurons_o)
 
-
+            print("output")
+            print(output)
+            print()
 
             #backprop (not best cuz i dont want to do this real yet)
 
@@ -81,9 +91,9 @@ for runde in range(runden):
             if thisoff < off:
                 off = thisoff
 
-                W1_best = W1_iteration
-                W2_best = W2_iteration
-                W3_best = W3_iteration
+                W1_best
+                W2_best
+                W3_best
             
             '''
             #only if something is wrong
@@ -95,10 +105,6 @@ for runde in range(runden):
             #update weights on the best out of every few nn's
             print("Start "+str(xx)+" update...")
             
-            W1_test = W1_best
-            W2_test = W2_best
-            W3_test = W3_best
-
             print("Updated! Current error: "+str(off))
             
 
