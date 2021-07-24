@@ -50,13 +50,13 @@ W3_test = W3
 
 for runde in range(runden):
     xx = 0
-    for x in X[:1000]:
+    for x in X[:10000]:
         
 
         #randomness based on how off the current of lvl is
-        W1_iteration = np.random.uniform(low = W1_test - 1, high = W1_test + 1, size = (20, 784))
-        W2_iteration = np.random.uniform(low = W2_test - 1, high = W2_test + 1, size = (20, 20))
-        W3_iteration = np.random.uniform(low = W3_test - 1, high = W3_test + 1, size = (10, 20))
+        W1_iteration = np.random.uniform(low = W1_test - thisoff, high = W1_test + thisoff, size = (20, 784))
+        W2_iteration = np.random.uniform(low = W2_test - thisoff, high = W2_test + thisoff, size = (20, 20))
+        W3_iteration = np.random.uniform(low = W3_test - thisoff, high = W3_test + thisoff, size = (10, 20))
 
         #forward prop
         Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
@@ -93,7 +93,7 @@ for runde in range(runden):
             '''
 
         #update weights on the best out of every few pictures
-        if xx % 20 == 0:
+        if xx % 100 == 0:
             update += 1
             print("Start "+str(update)+" update...")
             
