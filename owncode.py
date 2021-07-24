@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 
 
 X, y = get_mnist() #X[0-5999 pictures, 0-783 pixel in each picture] y[0-59999 pictures, 0-9 real results in array]
-W1 = np.random.uniform(0, 1, (20, 784))
-W2 = np.random.uniform(0, 1, (20, 20))
-W3 = np.random.uniform(0, 1, (10, 20))
+W1 = np.random.uniform(low = 0, high = 1, size = (20, 784))
+W2 = np.random.uniform(low = 0, high = 1, size = (20, 20))
+W3 = np.random.uniform(low = 0, high = 1, size = (10, 20))
 b1 = np.zeros((20))
 b2 = np.zeros((20))
 b3 = np.zeros((10))
@@ -36,8 +36,9 @@ def ReLU(x):
 output = []
 runden = 1
 update = 0
+
 thisoff = 0
-off = 1 #off = max
+off = 10 #fehlerquote = max
 
 W1_best = W1
 W2_best = W2
@@ -53,9 +54,9 @@ for runde in range(runden):
         
 
         #randomness based on how off the current of lvl is
-        W1_iteration = np.random.uniform(W1_test - off, W1_test + off, (20, 784))
-        W2_iteration = np.random.uniform(W2_test - off, W2_test + off, (20, 20))
-        W3_iteration = np.random.uniform(W3_test - off, W3_test + off, (10, 20))
+        W1_iteration = np.random.uniform(low = W1_test - 1, high = W1_test + 1, size = (20, 784))
+        W2_iteration = np.random.uniform(low = W2_test - 1, high = W2_test + 1, size = (20, 20))
+        W3_iteration = np.random.uniform(low = W3_test - 1, high = W3_test + 1, size = (10, 20))
 
         #forward prop
         Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
@@ -64,15 +65,18 @@ for runde in range(runden):
         output = softmax(Neurons_o)
 
 
-        #backprop (not best yet cuz i dont want to do this real yet)
+        #backprop (not best cuz i dont want to do this real yet)
 
         #calculate off
-        thisoff = abs(sum(output - y[xx]))
+        thisoff = sum( abs(output - y[xx]) )
+        print("thisoff")
         print(thisoff)
-        print()
+        print("off")
         print(off)
-        print()
-        print()
+        print("output")
+        print(output)
+        print("y")
+        print(y[xx])
         #save every weight and bias if output is better then before
         if thisoff < off:
             off = thisoff
@@ -98,6 +102,7 @@ for runde in range(runden):
             W3_test = W3_best
 
             print("Updated! Current error: "+str(off))
+            
 
         #count for X
         xx += 1
