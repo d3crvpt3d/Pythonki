@@ -48,13 +48,14 @@ W2_test = W2
 W3_test = W3
 
 for runde in range(runden):
-    for x in X[:10000]:
-        xx = 0
+    xx = 0
+    for x in X[:1000]:
+        
 
         #randomness based on how off the current of lvl is
-        W1_iteration = np.random.uniform(W1_test - (off * 0.1), W1_test + (off * 0.1), (20, 784))
-        W2_iteration = np.random.uniform(W2_test - (off * 0.1), W2_test + (off * 0.1), (20, 20))
-        W3_iteration = np.random.uniform(W3_test - (off * 0.1), W3_test + (off * 0.1), (10, 20))
+        W1_iteration = np.random.uniform(W1_test - off, W1_test + off, (20, 784))
+        W2_iteration = np.random.uniform(W2_test - off, W2_test + off, (20, 20))
+        W3_iteration = np.random.uniform(W3_test - off, W3_test + off, (10, 20))
 
         #forward prop
         Neurons_h1 = sigmoid(np.dot(W1_iteration, X[xx]) + b1)
@@ -67,11 +68,7 @@ for runde in range(runden):
 
         #calculate off
         thisoff = abs(sum(output - y[xx]))
-        print(y[xx])
-        print()
-        print(output)
-        print()
-        print(thisoff)
+        
         #save every weight and bias if output is better then before
         if thisoff < off:
             off = thisoff
