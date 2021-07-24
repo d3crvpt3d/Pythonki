@@ -91,30 +91,30 @@ for runde in range(runden):
             xx += 1
 
 
-        #backprop:
+    #backprop:
 
 
-        #sum all of the error rate
-        thisoff = sigmoid(thisoff_tmp)
+    #sum all of the error rate
+    thisoff = sigmoid(thisoff_tmp)
 
 
-        #save every weight and bias if output is better then before
-        if thisoff < off:
+    #save every weight and bias if output is better then before
+    if thisoff < off:
             
 
-            #update new error rate
-            off = thisoff
+        #update new error rate
+        off = thisoff
 
-            W1_best = W1_test
-            W2_best = W2_test
-            W3_best = W3_test
+        W1_best = W1_test
+        W2_best = W2_test
+        W3_best = W3_test
             
-            '''
-            #only if something is wrong
-            b1_best = b1
-            b2_best = b2
-            b3_best = b3
-            '''
+        '''
+        #only if something is wrong
+        b1_best = b1
+        b2_best = b2
+        b3_best = b3
+        '''
 
 
 # Show results
