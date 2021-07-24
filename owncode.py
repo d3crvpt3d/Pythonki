@@ -68,7 +68,11 @@ for runde in range(runden):
 
         #calculate off
         thisoff = abs(sum(output - y[xx]))
-        
+        print(thisoff)
+        print()
+        print(off)
+        print()
+        print()
         #save every weight and bias if output is better then before
         if thisoff < off:
             off = thisoff
