@@ -59,7 +59,7 @@ def rand_gen_nn(x):
 
         for o in range(len(W1_best)-1):
             for p in range(len(W1_best[0])-1):
-                tmpw1[o][p] = 0 - W1_best[o][p] + np.random.random()
+                tmpw1[o][p] = 0 - W1_best[o][p] + np.random.random() * thisoff
         return tmpw1
 
     elif x == 1:
@@ -68,7 +68,7 @@ def rand_gen_nn(x):
         
         for o in range(len(W2_best)-1):
             for p in range(len(W2_best[0])-1):
-                tmpw2[o][p] = 0 - W2_best[o][p] + np.random.random()
+                tmpw2[o][p] = 0 - W2_best[o][p] + np.random.random() * thisoff
         return tmpw2
 
     elif x == 2:
@@ -77,13 +77,13 @@ def rand_gen_nn(x):
         
         for o in range(len(W3_best)-1):
             for p in range(len(W3_best[0])-1):
-                tmpw3[o][p] = 0 - W3_best[o][p] + np.random.random()
+                tmpw3[o][p] = 0 - W3_best[o][p] + np.random.random() * thisoff
         return tmpw3
 
 
 #some global variables
 output = []
-generationen = 2
+generationen = 10
 update = 0
 
 thisoff = 0
@@ -104,7 +104,7 @@ for generation in range(generationen):
 
 
     #anzahl der neuronale netzwerke
-    for i in range(20):
+    for i in range(10):
 
 
         #reset counter
