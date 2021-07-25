@@ -88,7 +88,7 @@ update = 0
 
 thisoff = 0
 thisoff_tmp = 0
-off = 1 #fehlerquote = max
+off = 100 #fehlerquote = max
 
 W1_best = W1
 W2_best = W2
@@ -109,10 +109,9 @@ for generation in range(generationen):
 
         #reset counter
         xx = 0
-
         
         #anzahl bilder
-        for x in X[:100]:
+        for x in X[:10]:
 
 
             #prüfen ob es die erste generation ist
@@ -144,46 +143,48 @@ for generation in range(generationen):
             thisoff_tmp = thisoff_tmp + sum( abs(output - y[xx]) )
 
 
-            #debug output
-            print("output")
-            print(output)
-            print("y")
-            print(y[xx])
-
-
             #count for X
             xx += 1
 
 
-    #backprop:
+        #backprop:
 
 
-    #sum all of the error rate
-    thisoff = sigmoid(thisoff_tmp)
+        #sum all of the error rate
+        thisoff = thisoff_tmp
+        thisoff_tmp = 0
+        
+        #save every weight and bias if output is better then before
+        if thisoff < off:
+            print("Error rate: "+str(thisoff))
 
+            #update new error rate
+            off = thisoff
+        
 
-    #save every weight and bias if output is better then before
-    if thisoff < off:
+            W1_best = W1_test
+            W2_best = W2_test
+            W3_best = W3_test
             
-
-        #update new error rate
-        off = thisoff
-
-        W1_best = W1_test
-        W2_best = W2_test
-        W3_best = W3_test
-            
-        '''
-        #only if something is wrong
-        b1_best = b1
-        b2_best = b2
-        b3_best = b3
-        '''
+            '''
+            #only if something is wrong
+            b1_best = b1
+            b2_best = b2
+            b3_best = b3
+            '''
+        else:
+            print("Error rate not better")
 
 
 # Show results
 index = int(input("Enter a number (0 - 59999): "))
 img = X[index]
 plt.imshow(img.reshape(28, 28), cmap="Greys")
+
+Neurons_h1 = sigmoid(np.dot(W1_best, X[xx]) + b1)
+Neurons_h2 = sigmoid(np.dot(W2_best, Neurons_h1) + b2)
+Neurons_o = sigmoid(np.dot(W3_best, Neurons_h2) + b3)
+output = softmax(Neurons_o)
+
 plt.title("Number: "+str(y[index].argmax()) +" Guess: "+ str(output.argmax()))
 plt.show()
