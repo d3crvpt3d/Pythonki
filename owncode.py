@@ -12,22 +12,28 @@ b2 = np.zeros((20))
 b3 = np.zeros((10))
 
 
-#activation functions
+#activation functions:
+
+
+#sigmoid function
 def sigmoid(x):
     s = 1/(1+np.exp(-x))
     return s
 
 
+#ableitung sigmoid function
 def sigmoid_derivative(x):
     sd = sigmoid(x)*(1-sigmoid(x))
     return sd
 
 
+#softmax function
 def softmax(x):
 	e = np.exp(x)
 	return e / e.sum()
 
 
+#ReLU function
 def ReLU(x):
     if x < 0:
         return 0
@@ -35,14 +41,54 @@ def ReLU(x):
         return x
 
 
+#randomisiere nn
+def rand_nn(x):
+    if x == 0:
+        return np.random.uniform(low = 0, high = 1, size = (20, 784))
+    elif x == 1:
+        return np.random.uniform(low = 0, high = 1, size = (20, 20))
+    elif x == 2:
+        return np.random.uniform(low = 0, high = 1, size = (10, 20))
+
+
+#randomisiere nn anhand bestem nn aus vorheriger gen
+def rand_gen_nn(x):
+    if x == 0:
+
+        tmpw1 = W1_best #set dimensions equal
+
+        for o in range(len(W1_best)-1):
+            for p in range(len(W1_best[0])-1):
+                tmpw1[o][p] = 0 - W1_best[o][p] + np.random.random()
+        return tmpw1
+
+    elif x == 1:
+
+        tmpw2 = W2_best #set dimensions equal
+        
+        for o in range(len(W2_best)-1):
+            for p in range(len(W2_best[0])-1):
+                tmpw2[o][p] = 0 - W2_best[o][p] + np.random.random()
+        return tmpw2
+
+    elif x == 2:
+
+        tmpw3 = W3_best #set dimensions equal
+        
+        for o in range(len(W3_best)-1):
+            for p in range(len(W3_best[0])-1):
+                tmpw3[o][p] = 0 - W3_best[o][p] + np.random.random()
+        return tmpw3
+
+
 #some global variables
 output = []
-runden = 1
+generationen = 2
 update = 0
 
 thisoff = 0
 thisoff_tmp = 0
-off = 10 #fehlerquote = max
+off = 1 #fehlerquote = max
 
 W1_best = W1
 W2_best = W2
@@ -54,7 +100,7 @@ W3_test = W3
 
 
 #durchgänge
-for runde in range(runden):
+for generation in range(generationen):
 
 
     #anzahl der neuronale netzwerke
@@ -67,6 +113,24 @@ for runde in range(runden):
         
         #anzahl bilder
         for x in X[:100]:
+
+
+            #prüfen ob es die erste generation ist
+            if generation == 0:
+
+
+                #randomisiere das nn
+                W1_test = rand_nn(0)
+                W2_test = rand_nn(1)
+                W3_test = rand_nn(2)
+
+            else:
+
+
+                #nn anhand des veherigen besten randomisieren
+                W1_test = rand_gen_nn(0)
+                W2_test = rand_gen_nn(1)
+                W3_test = rand_gen_nn(2)
 
 
             #forward prop:
