@@ -102,7 +102,7 @@ W3_test = W3
 #durchgänge
 for generation in range(generationen):
 
-
+    print("Error rate: "+str(thisoff))
     #anzahl der neuronale netzwerke
     for i in range(10):
 
@@ -156,7 +156,7 @@ for generation in range(generationen):
         
         #save every weight and bias if output is better then before
         if thisoff < off:
-            print("Error rate: "+str(thisoff))
+            
 
             #update new error rate
             off = thisoff
@@ -172,8 +172,6 @@ for generation in range(generationen):
             b2_best = b2
             b3_best = b3
             '''
-        else:
-            print("Error rate not better")
 
 
 # Show results
