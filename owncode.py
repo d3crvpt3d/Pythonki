@@ -1,188 +1,51 @@
 from data import get_mnist
 import numpy as np
 import matplotlib.pyplot as plt
+from tensorflow import keras
+from tensorflow.keras import layers
+
+from tensorflow.python.client import device_lib
+print(device_lib.list_local_devices())
+
+###from keras website
+###
+
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+# Preprocess the data (these are NumPy arrays)
+x_train = x_train.reshape(60000, 784).astype("float32") / 255
+x_test = x_test.reshape(10000, 784).astype("float32") / 255
+
+y_train = y_train.astype("float32")
+y_test = y_test.astype("float32")
+
+# Reserve 10,000 samples for validation
+x_val = x_train[-10000:]
+y_val = y_train[-10000:]
+x_train = x_train[:-10000]
+y_train = y_train[:-10000]
+
+###
+###from keras website
 
 
-X, y = get_mnist() #X[0-5999 pictures, 0-783 pixel in each picture] y[0-59999 pictures, 0-9 real results in array]
-W1 = np.random.uniform(low = 0, high = 1, size = (20, 784))
-W2 = np.random.uniform(low = 0, high = 1, size = (20, 20))
-W3 = np.random.uniform(low = 0, high = 1, size = (10, 20))
-b1 = np.zeros((20))
-b2 = np.zeros((20))
-b3 = np.zeros((10))
+
+model = keras.Sequential(
+    [
+        layers.Dense(784, activation="relu"),
+        layers.Dense(20, activation="relu"),
+        layers.Dense(20, activation="relu"),
+        layers.Dense(10, activation="softmax")
+    ]
+)
 
 
-#activation functions:
+model.compile(optimizer="adam", loss=keras.losses.SparseCategoricalCrossentropy(), metrics=[keras.metrics.SparseCategoricalAccuracy()])
 
 
-#sigmoid function
-def sigmoid(x):
-    s = 1/(1+np.exp(-x))
-    return s
+model.fit(x_train, y_train, batch_size=32, epochs=2, validation_data=(x_val, y_val))
 
 
-#ableitung sigmoid function
-def sigmoid_derivative(x):
-    sd = sigmoid(x)*(1-sigmoid(x))
-    return sd
-
-
-#softmax function
-def softmax(x):
-	e = np.exp(x)
-	return e / e.sum()
-
-
-#ReLU function
-def ReLU(x):
-    if x < 0:
-        return 0
-    else:
-        return x
-
-
-#randomisiere nn
-def rand_nn(x):
-    if x == 0:
-        return np.random.uniform(low = 0, high = 1, size = (20, 784))
-    elif x == 1:
-        return np.random.uniform(low = 0, high = 1, size = (20, 20))
-    elif x == 2:
-        return np.random.uniform(low = 0, high = 1, size = (10, 20))
-
-
-#randomisiere nn anhand bestem nn aus vorheriger gen
-def rand_gen_nn(x):
-    if x == 0:
-
-        tmpw1 = W1_best #set dimensions equal
-
-        for o in range(len(W1_best)-1):
-            for p in range(len(W1_best[0])-1):
-                tmpw1[o][p] = 0 - W1_best[o][p] + np.random.random() * thisoff
-        return tmpw1
-
-    elif x == 1:
-
-        tmpw2 = W2_best #set dimensions equal
-        
-        for o in range(len(W2_best)-1):
-            for p in range(len(W2_best[0])-1):
-                tmpw2[o][p] = 0 - W2_best[o][p] + np.random.random() * thisoff
-        return tmpw2
-
-    elif x == 2:
-
-        tmpw3 = W3_best #set dimensions equal
-        
-        for o in range(len(W3_best)-1):
-            for p in range(len(W3_best[0])-1):
-                tmpw3[o][p] = 0 - W3_best[o][p] + np.random.random() * thisoff
-        return tmpw3
-
-
-#some global variables
-output = []
-generationen = 10
-update = 0
-
-thisoff = 0
-thisoff_tmp = 0
-off = 100 #fehlerquote = max
-
-W1_best = W1
-W2_best = W2
-W3_best = W3
-
-W1_test = W1
-W2_test = W2
-W3_test = W3
-
-
-#durchgänge
-for generation in range(generationen):
-
-    print("Error rate: "+str(thisoff))
-    #anzahl der neuronale netzwerke
-    for i in range(10):
-
-
-        #reset counter
-        xx = 0
-        
-        #anzahl bilder
-        for x in X[:10]:
-
-
-            #prüfen ob es die erste generation ist
-            if generation == 0:
-
-
-                #randomisiere das nn
-                W1_test = rand_nn(0)
-                W2_test = rand_nn(1)
-                W3_test = rand_nn(2)
-
-            else:
-
-
-                #nn anhand des veherigen besten randomisieren
-                W1_test = rand_gen_nn(0)
-                W2_test = rand_gen_nn(1)
-                W3_test = rand_gen_nn(2)
-
-
-            #forward prop:
-            Neurons_h1 = sigmoid(np.dot(W1_test, X[xx]) + b1)
-            Neurons_h2 = sigmoid(np.dot(W2_test, Neurons_h1) + b2)
-            Neurons_o = sigmoid(np.dot(W3_test, Neurons_h2) + b3)
-            output = softmax(Neurons_o)
-            
-
-            #calculate off
-            thisoff_tmp = thisoff_tmp + sum( abs(output - y[xx]) )
-
-
-            #count for X
-            xx += 1
-
-
-        #backprop:
-
-
-        #sum all of the error rate
-        thisoff = thisoff_tmp
-        thisoff_tmp = 0
-        
-        #save every weight and bias if output is better then before
-        if thisoff < off:
-            
-
-            #update new error rate
-            off = thisoff
-        
-
-            W1_best = W1_test
-            W2_best = W2_test
-            W3_best = W3_test
-            
-            '''
-            #only if something is wrong
-            b1_best = b1
-            b2_best = b2
-            b3_best = b3
-            '''
-
-
-# Show results
-index = int(input("Enter a number (0 - 59999): "))
-img = X[index]
-plt.imshow(img.reshape(28, 28), cmap="Greys")
-
-Neurons_h1 = sigmoid(np.dot(W1_best, X[xx]) + b1)
-Neurons_h2 = sigmoid(np.dot(W2_best, Neurons_h1) + b2)
-Neurons_o = sigmoid(np.dot(W3_best, Neurons_h2) + b3)
-output = softmax(Neurons_o)
-
-plt.title("Number: "+str(y[index].argmax()) +" Guess: "+ str(output.argmax()))
-plt.show()
+print("Evaluate on test data")
+results = model.evaluate(x_test, y_test, batch_size=128)
+print("test loss, test acc:", results)
