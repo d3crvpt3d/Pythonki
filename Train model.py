@@ -49,3 +49,5 @@ model.fit(x_train, y_train, batch_size=32, epochs=2, validation_data=(x_val, y_v
 print("Evaluate on test data")
 results = model.evaluate(x_test, y_test, batch_size=128)
 print("test loss, test acc:", results)
+
+model.save('model.h5')
